@@ -204,10 +204,23 @@ static const u8 *mipi_exec_gpio(struct intel_dsi *intel_dsi, const u8 *data)
 	struct drm_device *dev = intel_dsi->base.base.dev;
 	struct drm_i915_private *dev_priv = dev->dev_private;
 
+	if (dev_priv->vbt.dsi.seq_version >= 3)
+		data++;
+
 	gpio = *data++;
 
 	/* pull up/down */
 	action = *data++;
+
+	if (!IS_VALLEYVIEW(dev_priv)) {
+		DRM_DEBUG_KMS("GPIO element not supported on this platform\n");
+		goto out;
+	}
+
+	if (dev_priv->vbt.dsi.seq_version >= 3) {
+		DRM_DEBUG_KMS("GPIO element v3 not supported\n");
+		goto out;
+	}
 
 	function = gtable[gpio].function_reg;
 	pad = gtable[gpio].pad_reg;
@@ -224,6 +237,8 @@ static const u8 *mipi_exec_gpio(struct intel_dsi *intel_dsi, const u8 *data)
 
 	/* pull up/down */
 	vlv_gpio_nc_write(dev_priv, pad, val);
+
+out:
 	mutex_unlock(&dev_priv->sb_lock);
 
 	return data;
