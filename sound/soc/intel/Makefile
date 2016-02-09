@@ -1,3 +1,6 @@
+ccflags-y += -DDEBUG
+EXTRA_CFLAGS += -DDEBUG
+
 # Core support
 obj-$(CONFIG_SND_SOC_INTEL_SST) += common/
 
