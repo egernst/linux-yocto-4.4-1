@@ -648,6 +648,7 @@ static int skl_probe(struct pci_dev *pci,
 	if (err < 0)
 		return err;
 
+printk(KERN_ERR "TEST 1\n");
 	ebus = &skl->ebus;
 	bus = ebus_to_hbus(ebus);
 
@@ -655,10 +656,12 @@ static int skl_probe(struct pci_dev *pci,
 	if (err < 0)
 		goto out_free;
 
+printk(KERN_ERR "TEST 2\n");
 	skl->pci_id = pci->device;
 
 	skl->nhlt = skl_nhlt_init(bus->dev);
 
+printk(KERN_ERR "TEST 3\n");
 	if (skl->nhlt == NULL)
 		goto out_free;
 
@@ -666,15 +669,19 @@ static int skl_probe(struct pci_dev *pci,
 
 	pci_set_drvdata(skl->pci, ebus);
 
+printk(KERN_ERR "TEST 4\n");
 	/* check if dsp is there */
 	WARN_ON(!ebus->ppcap);
 
 	if (ebus->ppcap) {
+
+		printk(KERN_ERR "TEST 5\n");
 		err = skl_machine_device_register(skl,
 				  (void *)pci_id->driver_data);
 		if (err < 0)
 			goto out_nhlt_free;
 
+		printk(KERN_ERR "TEST 6\n");
 		err = skl_init_dsp(skl);
 		if (err < 0) {
 			dev_dbg(bus->dev, "error failed to register dsp\n");
@@ -734,6 +741,8 @@ out_nhlt_free:
 out_free:
 	skl->init_failed = 1;
 	skl_free(ebus);
+
+	printk(KERN_ERR "FAILED\n");
 
 	return err;
 }
