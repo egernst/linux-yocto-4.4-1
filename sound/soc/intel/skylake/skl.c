@@ -719,16 +719,22 @@ static int skl_probe(struct pci_dev *pci,
 	return 0;
 
 out_unregister:
+	dev_err(bus->dev, "TEST 6\n");
 	skl_platform_unregister(bus->dev);
 out_dmic_free:
+	dev_err(bus->dev, "TEST 5\n");
 	skl_dmic_device_unregister(skl);
 out_dsp_free:
+	dev_err(bus->dev, "TEST 4\n");
 	skl_free_dsp(skl);
 out_mach_free:
+	dev_err(bus->dev, "TEST 3\n");
 	skl_machine_device_unregister(skl);
 out_nhlt_free:
+	dev_err(bus->dev, "TEST 2\n");
 	skl_nhlt_free(skl->nhlt);
 out_free:
+	dev_err(bus->dev, "TEST 1\n");
 	skl->init_failed = 1;
 	skl_free(ebus);
 
